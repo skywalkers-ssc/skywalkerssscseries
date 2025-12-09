@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC Free Mock Test (CGL/CHSL)</title>
+    <style>
+        /* --- CSS STYLES (Design) --- */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; user-select: none; }
+        
+        /* Header */
+        .header { background-color: #2c3e50; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 18px; font-weight: bold; }
+        .timer-box { font-size: 20px; font-weight: bold; background: #fff; color: #d32f2f; padding: 5px 15px; border-radius: 4px; border: 2px solid #d32f2f; }
+
+        /* Layout */
+        .container { display: flex; height: calc(100vh - 65px); }
+        
+        /* Question Area */
+        .question-area { flex: 3; padding: 30px; background: white; overflow-y: auto; }
+        .q-header { font-size: 18px; font-weight: 600; color: #555; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .q-text { font-size: 17px; margin-bottom: 25px; line-height: 1.6; color: #222; }
+        
+        /* Options */
+        .options label { display: flex; align-items: center; background: #fff; padding: 12px 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .options label:hover { background: #e9ecef; border-color: #adb5bd; }
+        .options input { margin-right: 15px; transform: scale(1.2); }
+
+        /* Sidebar (Palette) */
+        .sidebar { flex: 1; background: #eef2f3; padding: 15px; border-left: 1px solid #ddd; display: flex; flex-direction: column; }
+        .student-info { text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ccc; font-weight: bold; }
+        .palette-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; overflow-y: auto; max-height: 60vh; padding: 5px; }
+        
+        /* Buttons in Palette */
+        .p-btn { height: 35px; width: 35px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; margin: auto; }
+        .p-btn:hover { background: #ddd; }
+        
+        /* Palette Colors (SSC Standard) */
+        .p-btn.answered { background-color: #28a745; color: white; border-color: #28a745; } /* Green */
+        .p-btn.not-answered { background-color: #dc3545; color: white; border-color: #dc3545; } /* Red */
+        .p-btn.review { background-color: #6f42c1; color: white; border-color: #6f42c1; } /* Purple */
+        .p-btn.not-visited { background-color: #fff; color: black; }
+        .p-btn.current { border: 2px solid #007bff; box-shadow: 0 0 4px #007bff; }
+
+        /* Footer */
+        .footer { position: fixed; bottom: 0; width: 75%; background: #fff; padding: 10px 20px; border-top: 1px solid #ccc; display: flex; gap: 10px; z-index: 10; }
+        .btn { padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; color: white; border-radius: 4px; font-size: 14px; text-transform: uppercase; }
+        .btn-save { background-color: #28a745; margin-left: auto; }
+        .btn-clear { background-color: #fff; color: black; border: 1px solid #ccc; }
+        .btn-review { background-color: #ffc107; color: black; }
+
+        .submit-btn { width: 100%; padding: 12px; background: #007bff; color: white; font-weight: bold; border: none; border-radius: 4px; margin-top: auto; cursor: pointer; }
+        .submit-btn:hover { background: #0056b3; }
+
+        /* Result Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .score-big { font-size: 48px; font-weight: bold; color: #007bff; margin: 10px 0; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .question-area { flex: none; height: 55vh; width: 100%; box-sizing: border-box; }
+            .sidebar { flex: 1; width: 100%; box-sizing: border-box; border-left: none; border-top: 1px solid #ddd; }
+            .footer { width: 100%; box-sizing: border-box; justify-content: space-between; padding: 10px; }
+            .btn { padding: 8px 12px; font-size: 12px; }
+            .btn-save { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">SSC Practice Set 01</div>
+        <div class="timer-box" id="timer">60:00</div>
+    </div>
+
+    <div class="container">
+        <div class="question-area">
+            <div class="q-header">Question No. <span id="q-number">1</span></div>
+            <div class="q-text" id="q-text">Loading...</div>
+            <div class="options" id="options-container">
+                </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="student-info">Candidate: Student</div>
+            <div class="palette-grid" id="palette-box">
+                </div>
+            <button class="submit-btn" onclick="submitTest()">SUBMIT TEST</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button class="btn btn-review" onclick="markReview()">Mark for Review</button>
+        <button class="btn btn-clear" onclick="clearResponse()">Clear Response</button>
+        <button class="btn btn-save" onclick="saveAndNext()">Save & Next</button>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2>Test Result</h2>
+            <div class="score-big" id="score">0</div>
+            <p>Total Marks</p>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div style="color: green;">✔ Correct: <span id="correct-count">0</span></div>
+                <div style="color: red;">✖ Wrong: <span id="wrong-count">0</span></div>
+            </div>
+            <p style="margin-top: 10px; color: #666;">Unattempted: <span id="unattempted-count">0</span></p>
+            <button class="submit-btn" style="margin-top: 20px;" onclick="location.reload()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // YAHAN APNE QUESTIONS EDIT KAREIN
+        // ==========================================
+        const questions = [
+            {
+                id: 1,
+                text: "Which article of the Indian Constitution deals with the 'Right to Equality'?",
+                options: ["Article 12-13", "Article 14-18", "Article 19-22", "Article 23-24"],
+                correct: 1 // 0=A, 1=B, 2=C, 3=D
+            },
+            {
+                id: 2,
+                text: "Select the antonym of 'OBSOLETE'.",
+                options: ["Outdated", "Remote", "Recent", "Rigid"],
+                correct: 2
+            },
+            {
+                id: 3,
+                text: "If x + 1/x = 4, then find the value of x² + 1/x².",
+                options: ["14", "16", "12", "18"],
+                correct: 0
+            },
+            {
+                id: 4,
+                text: "Which city is known as the 'Silicon Valley of India'?",
+                options: ["Hyderabad", "Pune", "Bengaluru", "Chennai"],
+                correct: 2
+            },
+            {
+                id: 5,
+                text: "Rearrange the jumbled sentences: (P) He was a great king (Q) who ruled wisely (R) people loved him (S) for many years.",
+                options: ["PQSR", "PQRS", "QPSR", "RSPQ"],
+                correct: 0
+            }
+        ];
+        // ==========================================
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null); 
+        let questionStatus = new Array(questions.length).fill('not-visited'); 
+        let timerTime = 60 * 60; // 60 Minutes
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initTest();
+        });
+
+        function initTest() {
+            loadQuestion(0);
+            renderPalette();
+            startTimer();
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            document.getElementById('q-number').innerText = index + 1;
+            document.getElementById('q-text').innerText = questions[index].text;
+            
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            questions[index].options.forEach((opt, i) => {
+                const checked = userAnswers[index] === i ? 'checked' : '';
+                optContainer.innerHTML += `
+                    <label onclick="selectOption(${i})">
+                        <input type="radio" name="opt" value="${i}" ${checked}> ${opt}
+                    </label>
+                `;
+            });
+            
+            // Update Palette status to 'not-answered' if visiting for first time
+            if (questionStatus[index] === 'not-visited') {
+                questionStatus[index] = 'not-answered';
+            }
+            updatePaletteUI();
+        }
+
+        function selectOption(i) {
+            // Just for UI effect if needed, actual save happens on Save & Next
+            const radios = document.getElementsByName('opt');
+            radios[i].checked = true;
+        }
+
+        function saveAndNext() {
+            const selectedInfo = document.querySelector('input[name="opt"]:checked');
+            if (selectedInfo) {
+                userAnswers[currentQIndex] = parseInt(selectedInfo.value);
+                questionStatus[currentQIndex] = 'answered';
+            } else {
+                // Agar kuch select nahi kiya aur Save Next dabaya, to Not Answered hi rahega
+                questionStatus[currentQIndex] = 'not-answered';
+            }
+            
+            if (currentQIndex < questions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            } else {
+                alert("This was the last question. Submit using the button in the palette.");
+            }
+            renderPalette();
+        }
+
+        function clearResponse() {
+            userAnswers[currentQIndex] = null;
+            questionStatus[currentQIndex] = 'not-answered';
+            const radios = document.querySelectorAll('input[name="opt"]');
+            radios.forEach(r => r.checked = false);
+            renderPalette();
+        }
+
+        function markReview() {
+            const selectedInfo = document.querySelector('input[name="opt"]:checked');
+            if(selectedInfo) {
+                 userAnswers[currentQIndex] = parseInt(selectedInfo.value); // Save answer too
+                 questionStatus[currentQIndex] = 'review'; // Answered & Marked for Review (Purple with Green dot logic usually, simplified here to Purple)
+            } else {
+                questionStatus[currentQIndex] = 'review';
+            }
+            
+            if (currentQIndex < questions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            }
+            renderPalette();
+        }
+
+        function renderPalette() {
+            const box = document.getElementById('palette-box');
+            box.innerHTML = '';
+            questionStatus.forEach((status, i) => {
+                let className = 'p-btn ';
+                if (status === 'answered') className += 'answered';
+                else if (status === 'review') className += 'review';
+                else if (status === 'not-answered' && status !== 'not-visited') className += 'not-answered';
+                
+                if (i === currentQIndex) className += ' current';
+
+                box.innerHTML += `<div class="${className}" onclick="loadQuestion(${i})">${i + 1}</div>`;
+            });
+        }
+
+        function updatePaletteUI() {
+            renderPalette();
+        }
+
+        function startTimer() {
+            const timerElem = document.getElementById('timer');
+            const interval = setInterval(() => {
+                if (timerTime <= 0) {
+                    clearInterval(interval);
+                    submitTest();
+                    return;
+                }
+                timerTime--;
+                let min = Math.floor(timerTime / 60);
+                let sec = timerTime % 60;
+                timerElem.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+            }, 1000);
+        }
+
+        function submitTest() {
+            let correct = 0;
+            let wrong = 0;
+            let unattempted = 0;
+
+            userAnswers.forEach((ans, index) => {
+                if (ans === null) {
+                    unattempted++;
+                } else if (ans === questions[index].correct) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            // SSC CGL Pattern: +2 for Correct, -0.50 for Wrong
+            let totalScore = (correct * 2) - (wrong * 0.50);
+
+            document.getElementById('score').innerText = totalScore;
+            document.getElementById('correct-count').innerText = correct;
+            document.getElementById('wrong-count').innerText = wrong;
+            document.getElementById('unattempted-count').innerText = unattempted;
+
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
