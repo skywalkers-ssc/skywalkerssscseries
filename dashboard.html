@@ -3,130 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skywalkers | Test Dashboard</title>
+    <title>Skywalkers | Command Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        /* Space Theme for Dashboard */
-        body {
-            margin: 0; font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+        :root {
+            --bg-dark: #0f172a;
+            --sidebar-bg: #1e293b;
+            --card-bg: #334155;
+            --accent: #3b82f6; /* Eduquity Blue */
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
         }
-        .brand-header { margin-top: 40px; text-align: center; }
-        .brand-name { font-size: 3rem; font-weight: 800; letter-spacing: 5px; text-transform: uppercase; background: -webkit-linear-gradient(0deg, #00d2ff, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .container { width: 90%; max-width: 1000px; margin-top: 50px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
-            padding: 30px; text-align: center; cursor: pointer; transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px #00d2ff; }
-        .card h2 { margin: 0; }
-        
-        .back-btn { cursor: pointer; color: #00d2ff; margin-top: 10px; display: none; }
-        .back-btn:hover { text-decoration: underline; }
 
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
-        .modal-box { background: #1e293b; padding: 30px; border-radius: 15px; width: 350px; text-align: center; border: 1px solid #00d2ff; }
-        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-primary { background: #00d2ff; color: black; }
-        .btn-outline { background: transparent; border: 2px solid #00d2ff; color: white; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px; background: var(--sidebar-bg); padding: 20px; display: flex; flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .brand span { color: var(--accent); }
+        
+        .menu-item {
+            padding: 12px 15px; margin-bottom: 5px; border-radius: 10px; color: var(--text-sub); 
+            display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .menu-item:hover, .menu-item.active { background: var(--accent); color: white; }
+        .menu-item i { font-size: 1.2rem; }
+
+        /* --- MAIN AREA --- */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
+        
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: #64748b; border-radius: 50%; }
+
+        /* Breadcrumb */
+        .breadcrumb { margin-bottom: 20px; color: var(--accent); cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;}
+        .breadcrumb:hover { text-decoration: underline; }
+
+        /* GRID SYSTEM */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+        .exam-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px; border-radius: 16px;
+            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .exam-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .card-icon { width: 50px; height: 50px; background: rgba(59, 130, 246, 0.1); color: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 15px; }
+        .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; }
+        .card-desc { font-size: 0.9rem; color: var(--text-sub); }
+        .shift-time { font-size: 0.8rem; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 999; }
+        .modal-box { background: #1e293b; padding: 30px; border-radius: 15px; width: 400px; text-align: center; border: 1px solid var(--accent); }
+        .btn { width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-primary { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="brand-header">
-        <div class="brand-name">SKYWALKERS</div>
-        <div style="color: #aaa;">Select Your Battlefield</div>
-        <div class="back-btn" id="backBtn" onclick="goBack()">← Back</div>
+    <div class="sidebar">
+        <div class="brand"><i class="ri-rocket-2-fill"></i> Skywalkers<span>.</span></div>
+        <div class="menu-item active"><i class="ri-dashboard-line"></i> Dashboard</div>
+        <div class="menu-item"><i class="ri-file-list-3-line"></i> My Tests</div>
+        <div class="menu-item"><i class="ri-bar-chart-line"></i> Analytics</div>
+        <div class="menu-item"><i class="ri-user-settings-line"></i> Profile</div>
     </div>
 
-    <div class="container" id="mainContainer"></div>
+    <div class="main-content">
+        <div class="header-top">
+            <h2 id="pageTitle">Select Exam Category</h2>
+            <div class="user-profile">
+                <span>Student</span>
+                <div class="avatar"></div>
+            </div>
+        </div>
 
-    <div class="modal-overlay" id="timerModal">
+        <div class="breadcrumb" id="backBtn" style="display:none;" onclick="goBack()">
+            <i class="ri-arrow-left-line"></i> Back
+        </div>
+
+        <div class="grid-container" id="gridBox">
+            </div>
+    </div>
+
+    <div class="modal" id="timerModal">
         <div class="modal-box">
-            <h3>Configure Test</h3>
-            <p id="paperName" style="color: #ccc; font-size: 0.9rem; margin-bottom: 20px;"></p>
-            
-            <button class="btn btn-primary" onclick="startTest(60)">Standard (60 Mins)</button>
-            <button class="btn btn-outline" onclick="toggleCustom()">Custom Timer</button>
-            
-            <input type="number" id="customInput" placeholder="Minutes" style="display:none; width: 90%; padding: 10px; margin: 10px auto; border-radius: 5px; border: none;">
-            <button class="btn btn-primary" id="startCustom" style="display:none; background: #ff0099; color: white;" onclick="startCustomTest()">Start</button>
-            
-            <button style="background:none; border:none; color:#aaa; margin-top:10px; cursor:pointer;" onclick="closeModal()">Cancel</button>
+            <h3 style="margin-top:0;">Configure Test</h3>
+            <p id="selectedPaper" style="color:#94a3b8; margin-bottom:20px;"></p>
+            <button class="btn btn-primary" onclick="startTest(60)">Start (60 Mins)</button>
+            <button class="btn" style="background:transparent; color:#94a3b8; border:1px solid #94a3b8;" onclick="closeModal()">Cancel</button>
         </div>
     </div>
 
     <script>
-        const data = {
-            "SSC Exams": {
-                "CGL": ["CGL 2024 (TCS Pattern)", "CGL 2025 (Expected Eduquity Pattern)"],
-                "CHSL": ["CHSL Mock 1", "CHSL Mock 2"]
-            },
-            "Railways": {
-                "NTPC": ["NTPC Stage 2 - Set A"],
-                "Group D": ["Group D - Set B"]
-            }
+        // --- DATA STRUCTURE (Based on RankMitra Image) ---
+        const cgl2025Shifts = {
+            "12 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "13 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "14 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "15 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "16 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "17 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "18 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "19 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "20 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "21 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "22 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)"], // As per typical pattern
+            "23 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "24 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "25 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "26 Sep 2025": ["Shift 1 (09:00 AM)", "Shift 2 (12:30 PM)", "Shift 3 (04:00 PM)"],
+            "14 Oct 2025": ["Shift 2 (12:00 PM)"] // Re-exam or special shift
         };
 
-        let level = 'home', currentCat = '', selectedPaper = '';
-        const container = document.getElementById('mainContainer');
+        const mainCategories = {
+            "SSC Exams": { "icon": "ri-government-line", "subs": ["CGL 2025 (Pre)", "CHSL 2025", "MTS 2025"] },
+            "Railways": { "icon": "ri-train-line", "subs": ["NTPC", "Group D"] }
+        };
+
+        let currentLevel = 'home'; 
+        let currentExam = '';
+        let currentDate = '';
+
+        const grid = document.getElementById('gridBox');
         const backBtn = document.getElementById('backBtn');
+        const pageTitle = document.getElementById('pageTitle');
 
+        // 1. Load Home (SSC, Railways)
         function loadHome() {
-            level = 'home'; backBtn.style.display = 'none'; container.innerHTML = '';
-            Object.keys(data).forEach(cat => {
-                container.innerHTML += `<div class="card" onclick="openCategory('${cat}')"><h2>${cat}</h2><p>View Papers</p></div>`;
+            currentLevel = 'home'; 
+            backBtn.style.display = 'none'; 
+            grid.innerHTML = '';
+            pageTitle.innerText = "Select Exam Category";
+            
+            Object.keys(mainCategories).forEach(cat => {
+                grid.innerHTML += `
+                <div class="exam-card" onclick="openCat('${cat}')">
+                    <div class="card-icon"><i class="${mainCategories[cat].icon}"></i></div>
+                    <div class="card-title">${cat}</div>
+                    <div class="card-desc">Practice latest PYQs</div>
+                </div>`;
             });
         }
 
-        function openCategory(cat) {
-            level = 'category'; currentCat = cat; backBtn.style.display = 'block'; container.innerHTML = '';
-            Object.keys(data[cat]).forEach(sub => {
-                container.innerHTML += `<div class="card" onclick="openPapers('${sub}')"><h2>${sub}</h2><p>Select Shift</p></div>`;
+        // 2. Open Category (CGL, CHSL list)
+        function openCat(cat) {
+            currentLevel = 'cat'; 
+            currentExam = cat;
+            backBtn.style.display = 'block'; 
+            grid.innerHTML = '';
+            pageTitle.innerText = cat;
+            
+            mainCategories[cat].subs.forEach(sub => {
+                grid.innerHTML += `
+                <div class="exam-card" onclick="openDates('${sub}')">
+                    <div class="card-icon"><i class="ri-book-open-line"></i></div>
+                    <div class="card-title">${sub}</div>
+                    <div class="card-desc">View Exam Dates</div>
+                </div>`;
             });
         }
 
-        function openPapers(sub) {
-            level = 'papers'; backBtn.innerText = `← Back to ${currentCat}`; container.innerHTML = '';
-            data[currentCat][sub].forEach(paper => {
-                container.innerHTML += `<div class="card" onclick="openModal('${paper}')" style="border-color: #ff0099;"><h3>${paper}</h3><p>Start Test</p></div>`;
+        // 3. Open Dates (Specific for CGL 2025)
+        function openDates(sub) {
+            if (sub === "CGL 2025 (Pre)") {
+                currentLevel = 'dates';
+                currentExam = sub;
+                backBtn.style.display = 'block';
+                grid.innerHTML = '';
+                pageTitle.innerText = "Select Exam Date";
+
+                // Loop through dates
+                Object.keys(cgl2025Shifts).forEach(date => {
+                    grid.innerHTML += `
+                    <div class="exam-card" onclick="openShifts('${date}')">
+                        <div class="card-icon"><i class="ri-calendar-event-line"></i></div>
+                        <div class="card-title">${date}</div>
+                        <div class="card-desc">Click to view shifts</div>
+                    </div>`;
+                });
+            } else {
+                // Placeholder for other exams
+                alert("Only CGL 2025 data is added currently!");
+            }
+        }
+
+        // 4. Open Shifts (Final Step)
+        function openShifts(date) {
+            currentLevel = 'shifts';
+            currentDate = date;
+            grid.innerHTML = '';
+            pageTitle.innerText = `${currentExam} - ${date}`;
+
+            const shifts = cgl2025Shifts[date];
+            shifts.forEach(shift => {
+                grid.innerHTML += `
+                <div class="exam-card" onclick="openModal('${currentExam} ${date} - ${shift}')" style="border-left: 4px solid var(--accent);">
+                    <div class="card-title">${shift}</div>
+                    <div class="shift-time">TCS/Eduquity Pattern</div>
+                    <div class="card-desc" style="margin-top:10px; color:#fff;">Start Test →</div>
+                </div>`;
             });
         }
 
+        // Navigation Logic
         function goBack() {
-            if(level === 'papers') openCategory(currentCat);
-            else if(level === 'category') loadHome();
+            if(currentLevel === 'shifts') openDates(currentExam);
+            else if(currentLevel === 'dates') openCat("SSC Exams"); // Hardcoded for demo
+            else if(currentLevel === 'cat') loadHome();
         }
 
-        function openModal(paper) {
-            selectedPaper = paper;
-            document.getElementById('paperName').innerText = paper;
+        // Modal Functions
+        function openModal(name) {
+            document.getElementById('selectedPaper').innerText = name;
             document.getElementById('timerModal').style.display = 'flex';
         }
-
         function closeModal() { document.getElementById('timerModal').style.display = 'none'; }
         
-        function toggleCustom() {
-            const inp = document.getElementById('customInput');
-            const btn = document.getElementById('startCustom');
-            inp.style.display = (inp.style.display === 'none') ? 'block' : 'none';
-            btn.style.display = (btn.style.display === 'none') ? 'block' : 'none';
+        function startTest(time) {
+            const paperName = document.getElementById('selectedPaper').innerText;
+            window.location.href = `test.html?paper=${encodeURIComponent(paperName)}&time=${time}`;
         }
 
-        function startTest(mins) {
-            // Yahan se TEST.HTML par jayega
-            window.location.href = `test.html?paper=${encodeURIComponent(selectedPaper)}&time=${mins}`;
-        }
-
-        function startCustomTest() {
-            const val = document.getElementById('customInput').value;
-            if(val) startTest(val);
-        }
-
+        // Init
         loadHome();
     </script>
 </body>
