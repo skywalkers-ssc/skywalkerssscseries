@@ -3,296 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skywalkers | Precision Prep</title>
+    <title>Skywalkers | TCS & Eduquity Pattern</title>
     <style>
-        /* --- APPLE SYSTEM TYPOGRAPHY & VARIABLES --- */
+        /* --- CORE VARIABLES --- */
         :root {
-            /* Apple-esque Dark Mode Palette */
-            --bg-main: #000000; /* Pure Black */
-            --bg-secondary: #1c1c1e; /* Dark Gray for cards */
+            --bg-main: #050505;
+            --bg-card: #121212;
             --text-primary: #ffffff;
-            --text-secondary: #86868b; /* Apple's secondary text gray */
-            --accent-blue: #2997ff; /* Apple's vivid blue */
-            --accent-gold: #bf9b30; /* Subtle premium gold for emphasis */
-            --danger: #ff453a;
-            
-            /* The cleanest font stack possible */
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --text-muted: #86868b;
+            --accent-blue: #2997ff;
+            --accent-gold: #fbbf24;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-stack);
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: var(--font-stack); background-color: var(--bg-main); color: var(--text-primary); overflow-x: hidden; scroll-behavior: smooth; }
+        a { text-decoration: none; color: inherit; }
 
-        /* Utilities */
+        /* --- ANIMATIONS --- */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: 0.8s all ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVBAR --- */
+        .navbar { position: fixed; top: 0; width: 100%; padding: 18px 0; background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        .text-center { text-align: center; }
-        .text-secondary { color: var(--text-secondary); }
-        .highlight { color: var(--accent-blue); }
-        .highlight-gold { color: var(--accent-gold); }
-        
-        /* Smooth Scroll Animation Elements */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-        /* --- NAVBAR (Glass Effect) --- */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 0;
-            background: rgba(0, 0, 0, 0.7); /* Frosted glass base */
-            backdrop-filter: blur(20px); /* The Apple Blur */
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
         .brand span { color: var(--accent-blue); }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-left: 30px; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: var(--text-primary); }
+        .nav-menu a { margin-left: 25px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: 0.3s; }
+        .nav-menu a:hover { color: var(--text-primary); }
+        .login-btn { background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 20px; color: white !important; border: 1px solid rgba(255,255,255,0.1); }
 
         /* --- HERO SECTION --- */
-        .hero {
-            height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            /* Subtle premium gradient background, not flashy */
-            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #000000 60%);
-        }
+        .hero { height: 90vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 70%); }
+        .hero h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; background: linear-gradient(180deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.3rem; color: var(--text-muted); max-width: 650px; margin: 0 auto 40px; }
+        .cta-btn { background: var(--accent-blue); color: white; padding: 16px 45px; font-size: 1.1rem; font-weight: 600; border-radius: 50px; box-shadow: 0 0 20px rgba(41, 151, 255, 0.4); transition: transform 0.2s; display: inline-block; cursor: pointer; }
+        .cta-btn:hover { transform: scale(1.05); }
 
-        .hero-content { max-width: 800px; }
+        /* --- STATS BAR --- */
+        .stats-section { background: #0f0f0f; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 40px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+        .stat-item h3 { font-size: 2.5rem; margin: 0; font-weight: 800; color: var(--text-primary); }
+        .stat-item p { color: var(--text-muted); margin: 5px 0 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        h1.hero-title {
-            font-size: 5rem;
-            font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            /* Gradient Text for Premium feel */
-            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* --- FEATURES --- */
+        .features-section { padding: 80px 0; background: #0a0a0a; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
+        .feature-box { text-align: left; }
+        .icon-box { width: 60px; height: 60px; background: rgba(41, 151, 255, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--accent-blue); font-size: 1.5rem; margin-bottom: 20px; }
+        .feature-box h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .feature-box p { color: var(--text-muted); line-height: 1.6; }
 
-        p.hero-sub {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-        }
-
-        /* Apple Style Button */
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background-color: var(--accent-blue);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 30px; /* Rounded pills */
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(41, 151, 255, 0.3);
-        }
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 30px rgba(41, 151, 255, 0.5);
-        }
-
-        /* --- THE "REALITY CHECK" SECTION (Psychology Hook) --- */
-        .reality-section {
-            padding: 100px 0;
-            background-color: #090909;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .section-headline {
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 60px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .feature-card {
-            background: var(--bg-secondary);
-            padding: 40px;
-            border-radius: 24px; /* Smooth apple corners */
-            text-align: left;
-            transition: transform 0.3s;
-        }
-        .feature-card:hover { transform: translateY(-5px); }
-
-        .card-icon { font-size: 2.5rem; margin-bottom: 20px; color: var(--accent-gold); }
-        .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
-        .card-text { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; }
-
-        /* --- EXAM QUERIES SECTION --- */
-        .queries-section { padding: 100px 0; }
-        .query-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        .query-box {
-            padding: 30px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .query-question { font-weight: 600; font-size: 1.2rem; margin-bottom: 10px; color: var(--accent-blue); }
-        .query-answer { color: var(--text-secondary); }
-
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            h1.hero-title { font-size: 3.5rem; }
-            p.hero-sub { font-size: 1.2rem; }
-            .nav-links { display: none; } /* Simple mobile view */
-            .query-grid { grid-template-columns: 1fr; }
-        }
+        /* Mobile */
+        @media (max-width: 768px) { .hero h1 { font-size: 3rem; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px; } .features-grid { grid-template-columns: 1fr; } .nav-menu { display: none; } }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="container nav-content">
+        <div class="container nav-inner">
             <div class="brand">Skywalkers<span>.</span></div>
-            <div class="nav-links">
-                <a href="#reality">Why Us</a>
-                <a href="#exams">Exams</a>
-                <a href="#start">Login</a>
+            <div class="nav-menu">
+                <a href="#">Exams</a>
+                <a href="#">Pass</a>
+                <a href="#" class="login-btn">Login</a>
             </div>
         </div>
     </nav>
 
     <section class="hero">
-        <div class="container text-center hero-content fade-up">
-            <h1 class="hero-title">Don't just practice.<br>Practice <span class="highlight-gold">Pro.</span></h1>
-            <p class="hero-sub">
-                The exact TCS interface. The exact pressure. 
-                The only platform engineered to turn aspirants into rankers.
-            </p>
-            <a href="#main-dashboard" class="cta-button" onclick="loadDashboard()">Start Your Journey</a>
+        <div class="container fade-in">
+            <h1>Master the<br>New Exam Pattern.</h1>
+            <p>India's only platform optimized for both <strong>TCS & Eduquity</strong> interfaces. Don't let a new vendor surprise you on exam day.</p>
             
-            <div style="margin-top: 50px; color: var(--text-secondary); font-size: 0.9rem;">
-                Trusted by serious CGL, CHSL & Railway aspirants.
+            <a href="dashboard.html" class="cta-btn">Enter Test Arena</a>
+        </div>
+    </section>
+
+    <section class="stats-section fade-in">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item"><h3>10k+</h3><p>Active Learners</p></div>
+                <div class="stat-item"><h3>TCS</h3><p>& Eduquity Ready</p></div>
+                <div class="stat-item"><h3>500+</h3><p>Selections</p></div>
+                <div class="stat-item"><h3>4.8★</h3><p>User Rating</p></div>
             </div>
         </div>
     </section>
 
-    <section id="reality" class="reality-section">
-        <div class="container text-center fade-up">
-            <h2 class="section-headline">The Hard Truth About Selection.</h2>
-            <p class="text-secondary" style="max-width: 700px; margin: 0 auto 60px auto; font-size: 1.2rem;">
-                Knowledge isn't enough. 60% of capable candidates fail because they panic under the timer or mismanage the interface. If you aren't training in reality, you aren't training at all.
-            </p>
-
-            <div class="grid-3">
-                <div class="feature-card">
-                    <div class="card-icon">🎯</div>
-                    <h3 class="card-title">TCS-Grade Precision</h3>
-                    <p class="card-text">
-                        Forget generic quizzes. We replicated every pixel of the actual exam center interface. The green buttons, the purple 'Mark for Review' – get comfortable with the real battlefield.
-                    </p>
+    <section class="features-section fade-in">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; text-align: center;">Why Skywalkers?</h2>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="icon-box">⚡</div>
+                    <h3>Dual Interface Engine</h3>
+                    <p>Whether it's the classic TCS layout or the modern Eduquity UI, switch between them instantly to be ready for any surprise.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="card-icon">⏱️</div>
-                    <h3 class="card-title">Pressure Calibration</h3>
-                    <p class="card-text">
-                        Most students choke in the last 10 minutes. Our adaptive timers train your brain to make decisions under severe time constraints. Normalize the pressure.
-                    </p>
+                <div class="feature-box">
+                    <div class="icon-box">📊</div>
+                    <h3>Smart Analytics</h3>
+                    <p>Track your accuracy and time-management skills against the top 1% of rankers.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="card-icon">📈</div>
-                    <h3 class="card-title">Ruthless Analytics</h3>
-                    <p class="card-text">
-                        We don't just give you a score. We tell you *why* you lost marks. Was it a silly mistake? Conceptual gap? Or time mismanagement? Fix the root cause.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="queries-section">
-        <div class="container fade-up">
-            <h2 class="section-headline text-center" style="font-size: 2.5rem;">Engineered for your doubts.</h2>
-            <div class="query-grid">
-                <div class="query-box">
-                    <div class="query-question">"I know the concepts, but I can't attempt 100 questions in 60 mins."</div>
-                    <div class="query-answer">That's an interface and strategy issue, not a knowledge issue. Our simulated environment builds the muscle memory needed for speed.</div>
-                </div>
-                <div class="query-box">
-                    <div class="query-question">"Does the platform handle negative marking correctly?"</div>
-                    <div class="query-answer">Precisely. 0.50 deductions are calculated exactly as per SSC commission rules. Know your true standing.</div>
-                </div>
-                <div class="query-box">
-                    <div class="query-question">"Are these actual PYQs?"</div>
-                    <div class="query-answer">Yes. We don't invent irrelevant questions. We serve you the exact past papers so you understand the commission's mindset.</div>
-                </div>
-                <div class="query-box">
-                    <div class="query-question">"Why Skywalkers over free PDFs?"</div>
-                    <div class="query-answer">A PDF doesn't have a ticking clock. A PDF doesn't analyze your weak zones. You are here to clear an exam, not read a book.</div>
+                <div class="feature-box">
+                    <div class="icon-box">🎯</div>
+                    <h3>Latest PYQs</h3>
+                    <p>Updated daily with the newest questions from CGL, CHSL, and Railway exams conducted by both agencies.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section style="padding: 100px 0; text-align: center;">
-        <div class="container fade-up">
-            <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 30px;">Stop simulating. <span class="highlight-gold">Start competing.</span></h2>
-             <a href="#main-dashboard" class="cta-button" onclick="loadDashboard()">Enter the Arena</a>
+    <footer>
+        <div class="container" style="padding: 40px 0; text-align: center; color: #666;">
+            &copy; 2025 Skywalkers EdTech. Ready for the Future.
         </div>
-    </section>
-
+    </footer>
 
     <script>
-        // --- SCROLL ANIMATION SCRIPT (For smooth reveal) ---
-        const observerOptions = {
-            threshold: 0.2 // Trigger when 20% of element is visible
-        };
-
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-up').forEach((el) => {
-            observer.observe(el);
-        });
-
-        // --- Placeholder function to load your dashboard ---
-        function loadDashboard() {
-            // Jab aapka main dashboard ready ho jaye, 
-            // toh yahan window.location.href = 'dashboard.html' laga dena.
-            alert("Redirecting to the Skywalkers Test Arena...");
-            // For now, let's just scroll down to a placeholder area or load the next script
-            // document.getElementById('mainContainer').scrollIntoView({behavior: 'smooth'});
-        }
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
     </script>
 </body>
 </html>
