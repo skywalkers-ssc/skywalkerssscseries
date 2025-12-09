@@ -3,129 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skywalkers | TCS & Eduquity Pattern</title>
+    <title>Skywalkers | Free Exam Revolution</title>
     <style>
-        /* --- CORE VARIABLES --- */
         :root {
-            --bg-main: #050505;
-            --bg-card: #121212;
-            --text-primary: #ffffff;
-            --text-muted: #86868b;
-            --accent-blue: #2997ff;
-            --accent-gold: #fbbf24;
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --bg: #090014; /* Deep Space Purple */
+            --primary: #8b5cf6; /* Violet */
+            --accent: #00d2ff; /* Cyan */
+            --text: #ffffff;
         }
 
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: var(--font-stack); background-color: var(--bg-main); color: var(--text-primary); overflow-x: hidden; scroll-behavior: smooth; }
-        a { text-decoration: none; color: inherit; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
 
-        /* --- ANIMATIONS --- */
-        .fade-in { opacity: 0; transform: translateY(20px); transition: 0.8s all ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        /* Navbar */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%;
+            backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
+        .brand span { color: var(--accent); }
 
-        /* --- NAVBAR --- */
-        .navbar { position: fixed; top: 0; width: 100%; padding: 18px 0; background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-        .brand span { color: var(--accent-blue); }
-        .nav-menu a { margin-left: 25px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: 0.3s; }
-        .nav-menu a:hover { color: var(--text-primary); }
-        .login-btn { background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 20px; color: white !important; border: 1px solid rgba(255,255,255,0.1); }
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
 
-        /* --- HERO SECTION --- */
-        .hero { height: 90vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 70%); }
-        .hero h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; background: linear-gradient(180deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.3rem; color: var(--text-muted); max-width: 650px; margin: 0 auto 40px; }
-        .cta-btn { background: var(--accent-blue); color: white; padding: 16px 45px; font-size: 1.1rem; font-weight: 600; border-radius: 50px; box-shadow: 0 0 20px rgba(41, 151, 255, 0.4); transition: transform 0.2s; display: inline-block; cursor: pointer; }
-        .cta-btn:hover { transform: scale(1.05); }
+        /* Abstract Background blobs */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+        }
+        .blob-1 { width: 300px; height: 300px; background: var(--primary); top: 10%; left: -10%; }
+        .blob-2 { width: 200px; height: 200px; background: var(--accent); bottom: 10%; right: -5%; animation-delay: 2s; }
 
-        /* --- STATS BAR --- */
-        .stats-section { background: #0f0f0f; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 40px 0; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
-        .stat-item h3 { font-size: 2.5rem; margin: 0; font-weight: 800; color: var(--text-primary); }
-        .stat-item p { color: var(--text-muted); margin: 5px 0 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(20px) scale(1.1); }
+            100% { transform: translateY(0px) scale(1); }
+        }
 
-        /* --- FEATURES --- */
-        .features-section { padding: 80px 0; background: #0a0a0a; }
-        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
-        .feature-box { text-align: left; }
-        .icon-box { width: 60px; height: 60px; background: rgba(41, 151, 255, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--accent-blue); font-size: 1.5rem; margin-bottom: 20px; }
-        .feature-box h3 { font-size: 1.3rem; margin-bottom: 10px; }
-        .feature-box p { color: var(--text-muted); line-height: 1.6; }
+        /* Typography */
+        h1 {
+            font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .highlight { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+        
+        p { font-size: 1.2rem; color: #cbd5e1; max-width: 600px; margin-bottom: 40px; }
 
-        /* Mobile */
-        @media (max-width: 768px) { .hero h1 { font-size: 3rem; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px; } .features-grid { grid-template-columns: 1fr; } .nav-menu { display: none; } }
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 5px 15px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: bold;
+            margin-bottom: 20px; display: inline-block;
+        }
+
+        /* Buttons */
+        .cta-btn {
+            background: linear-gradient(45deg, var(--primary), #6d28d9);
+            color: white; padding: 15px 40px; border-radius: 50px;
+            font-size: 1.2rem; font-weight: bold; text-decoration: none;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(139, 92, 246, 0.8); }
+
+        /* Exam Grid */
+        .exam-strip {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 50px;
+        }
+        .exam-pill {
+            background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1); font-weight: 600;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .blob-1 { width: 150px; height: 150px; }
+            .navbar { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="container nav-inner">
-            <div class="brand">Skywalkers<span>.</span></div>
-            <div class="nav-menu">
-                <a href="#">Exams</a>
-                <a href="#">Pass</a>
-                <a href="#" class="login-btn">Login</a>
-            </div>
-        </div>
+        <div class="brand">SKYWALKERS<span>.</span></div>
     </nav>
 
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
     <section class="hero">
-        <div class="container fade-in">
-            <h1>Master the<br>New Exam Pattern.</h1>
-            <p>India's only platform optimized for both <strong>TCS & Eduquity</strong> interfaces. Don't let a new vendor surprise you on exam day.</p>
-            
-            <a href="dashboard.html" class="cta-btn">Enter Test Arena</a>
+        <div class="badge">🚀 100% FREE FOR EVERYONE</div>
+        
+        <h1>Crack SSC CGL & CHSL 2025<br> <span class="highlight">Without Paying a Penny.</span></h1>
+        
+        <p>Premium Quality Mock Tests. Real Exam Interface (Hindi & English). Detailed Analysis. Bilkul Free.</p>
+        
+        <a href="dashboard.html" class="cta-btn">Start Practice Now</a>
+
+        <div class="exam-strip">
+            <div class="exam-pill">SSC CGL 25</div>
+            <div class="exam-pill">SSC CHSL 25</div>
+            <div class="exam-pill">MTS</div>
+            <div class="exam-pill">Railways</div>
+            <div class="exam-pill">GD Constable</div>
         </div>
     </section>
 
-    <section class="stats-section fade-in">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item"><h3>10k+</h3><p>Active Learners</p></div>
-                <div class="stat-item"><h3>TCS</h3><p>& Eduquity Ready</p></div>
-                <div class="stat-item"><h3>500+</h3><p>Selections</p></div>
-                <div class="stat-item"><h3>4.8★</h3><p>User Rating</p></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="features-section fade-in">
-        <div class="container">
-            <h2 style="font-size: 2.5rem; text-align: center;">Why Skywalkers?</h2>
-            <div class="features-grid">
-                <div class="feature-box">
-                    <div class="icon-box">⚡</div>
-                    <h3>Dual Interface Engine</h3>
-                    <p>Whether it's the classic TCS layout or the modern Eduquity UI, switch between them instantly to be ready for any surprise.</p>
-                </div>
-                <div class="feature-box">
-                    <div class="icon-box">📊</div>
-                    <h3>Smart Analytics</h3>
-                    <p>Track your accuracy and time-management skills against the top 1% of rankers.</p>
-                </div>
-                <div class="feature-box">
-                    <div class="icon-box">🎯</div>
-                    <h3>Latest PYQs</h3>
-                    <p>Updated daily with the newest questions from CGL, CHSL, and Railway exams conducted by both agencies.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container" style="padding: 40px 0; text-align: center; color: #666;">
-            &copy; 2025 Skywalkers EdTech. Ready for the Future.
-        </div>
-    </footer>
-
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
-    </script>
 </body>
 </html>
