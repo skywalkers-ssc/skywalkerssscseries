@@ -3,327 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skywalkers - The Ultimate Test Series</title>
+    <title>Skywalkers | Precision Prep</title>
     <style>
-        /* --- KHATARNAK UI (CSS) --- */
+        /* --- APPLE SYSTEM TYPOGRAPHY & VARIABLES --- */
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-hover: rgba(255, 255, 255, 0.2);
-            --neon-blue: #00d2ff;
-            --neon-pink: #ff0099;
-            --text-white: #ffffff;
+            /* Apple-esque Dark Mode Palette */
+            --bg-main: #000000; /* Pure Black */
+            --bg-secondary: #1c1c1e; /* Dark Gray for cards */
+            --text-primary: #ffffff;
+            --text-secondary: #86868b; /* Apple's secondary text gray */
+            --accent-blue: #2997ff; /* Apple's vivid blue */
+            --accent-gold: #bf9b30; /* Subtle premium gold for emphasis */
+            --danger: #ff453a;
+            
+            /* The cleanest font stack possible */
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at center, #1a2a6c, #b21f1f, #fdbb2d); /* Fallback */
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Deep Space Theme */
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: var(--font-stack);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
         }
 
-        /* Branding */
-        .brand-header {
-            margin-top: 40px;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
+        /* Utilities */
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        .text-center { text-align: center; }
+        .text-secondary { color: var(--text-secondary); }
+        .highlight { color: var(--accent-blue); }
+        .highlight-gold { color: var(--accent-gold); }
         
-        .brand-name {
-            font-size: 4rem;
+        /* Smooth Scroll Animation Elements */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVBAR (Glass Effect) --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.7); /* Frosted glass base */
+            backdrop-filter: blur(20px); /* The Apple Blur */
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent-blue); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-left: 30px; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /* Subtle premium gradient background, not flashy */
+            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #000000 60%);
+        }
+
+        .hero-content { max-width: 800px; }
+
+        h1.hero-title {
+            font-size: 5rem;
             font-weight: 800;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            background: -webkit-linear-gradient(0deg, var(--neon-blue), #fff, var(--neon-pink));
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            /* Gradient Text for Premium feel */
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
         }
 
-        .tagline {
-            font-size: 1.2rem;
-            color: #ddd;
-            letter-spacing: 2px;
-            margin-top: 10px;
+        p.hero-sub {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
         }
 
-        /* Container for Cards */
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin-top: 50px;
+        /* Apple Style Button */
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: var(--accent-blue);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px; /* Rounded pills */
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(41, 151, 255, 0.3);
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(41, 151, 255, 0.5);
+        }
+
+        /* --- THE "REALITY CHECK" SECTION (Psychology Hook) --- */
+        .reality-section {
+            padding: 100px 0;
+            background-color: #090909;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-headline {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 60px;
+        }
+
+        .grid-3 {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 24px; /* Smooth apple corners */
+            text-align: left;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-5px); }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 20px; color: var(--accent-gold); }
+        .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
+        .card-text { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; }
+
+        /* --- EXAM QUERIES SECTION --- */
+        .queries-section { padding: 100px 0; }
+        .query-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            transition: all 0.5s ease;
         }
-
-        /* Glassmorphism Cards */
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+        .query-box {
             padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-            position: relative;
-            overflow: hidden;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
         }
+        .query-question { font-weight: 600; font-size: 1.2rem; margin-bottom: 10px; color: var(--accent-blue); }
+        .query-answer { color: var(--text-secondary); }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            background: var(--glass-hover);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px var(--neon-blue);
-            border-color: var(--neon-blue);
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            h1.hero-title { font-size: 3.5rem; }
+            p.hero-sub { font-size: 1.2rem; }
+            .nav-links { display: none; } /* Simple mobile view */
+            .query-grid { grid-template-columns: 1fr; }
         }
-
-        .card h2 {
-            font-size: 2rem;
-            margin: 0;
-            z-index: 2;
-            position: relative;
-        }
-
-        .card p {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
-        /* Breadcrumb (Navigation Path) */
-        .breadcrumb {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: var(--neon-blue);
-            cursor: pointer;
-            display: none; /* Hidden initially */
-        }
-        .breadcrumb:hover { text-decoration: underline; }
-
-        /* MODAL (Timer Selection) */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-box {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 15px;
-            width: 350px;
-            text-align: center;
-            border: 1px solid var(--neon-pink);
-            box-shadow: 0 0 20px rgba(255, 0, 153, 0.3);
-            animation: popUp 0.3s ease;
-        }
-
-        .modal-box h3 { color: white; margin-bottom: 20px; }
-
-        .option-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-standard { background: var(--neon-blue); color: #000; }
-        .btn-custom { background: transparent; border: 2px solid var(--neon-blue); color: white; }
-        .btn-standard:hover { opacity: 0.8; }
-        .btn-custom:hover { background: rgba(0, 210, 255, 0.2); }
-
-        .custom-time-input {
-            display: none;
-            width: 80%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
-        }
-
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
     </style>
 </head>
 <body>
 
-    <div class="brand-header">
-        <div class="brand-name">SKYWALKERS</div>
-        <div class="tagline">Touch the Sky with Knowledge</div>
-        <div class="breadcrumb" id="backBtn" onclick="goBack()">← Back</div>
-    </div>
-
-    <div class="container" id="mainContainer">
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="brand">Skywalkers<span>.</span></div>
+            <div class="nav-links">
+                <a href="#reality">Why Us</a>
+                <a href="#exams">Exams</a>
+                <a href="#start">Login</a>
+            </div>
         </div>
+    </nav>
 
-    <div class="modal-overlay" id="timerModal">
-        <div class="modal-box">
-            <h3>Configure Your Test</h3>
-            <p id="selectedPaperName" style="color: #ccc; font-size: 0.9rem; margin-bottom: 15px;"></p>
+    <section class="hero">
+        <div class="container text-center hero-content fade-up">
+            <h1 class="hero-title">Don't just practice.<br>Practice <span class="highlight-gold">Pro.</span></h1>
+            <p class="hero-sub">
+                The exact TCS interface. The exact pressure. 
+                The only platform engineered to turn aspirants into rankers.
+            </p>
+            <a href="#main-dashboard" class="cta-button" onclick="loadDashboard()">Start Your Journey</a>
             
-            <button class="option-btn btn-standard" onclick="startTest(60)">Standard Mode (60 Mins)</button>
-            
-            <button class="option-btn btn-custom" onclick="toggleCustomInput()">Custom Timer</button>
-            <input type="number" id="customTime" class="custom-time-input" placeholder="Enter Minutes (e.g. 30)">
-            <button class="option-btn btn-standard" id="startCustomBtn" style="display:none; margin-top:10px; background:var(--neon-pink); color:white;" onclick="startCustomTest()">Start Custom Test</button>
-            
-            <button onclick="closeModal()" style="background:none; border:none; color:#aaa; margin-top:10px; cursor:pointer;">Cancel</button>
+            <div style="margin-top: 50px; color: var(--text-secondary); font-size: 0.9rem;">
+                Trusted by serious CGL, CHSL & Railway aspirants.
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section id="reality" class="reality-section">
+        <div class="container text-center fade-up">
+            <h2 class="section-headline">The Hard Truth About Selection.</h2>
+            <p class="text-secondary" style="max-width: 700px; margin: 0 auto 60px auto; font-size: 1.2rem;">
+                Knowledge isn't enough. 60% of capable candidates fail because they panic under the timer or mismanage the interface. If you aren't training in reality, you aren't training at all.
+            </p>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">TCS-Grade Precision</h3>
+                    <p class="card-text">
+                        Forget generic quizzes. We replicated every pixel of the actual exam center interface. The green buttons, the purple 'Mark for Review' – get comfortable with the real battlefield.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-icon">⏱️</div>
+                    <h3 class="card-title">Pressure Calibration</h3>
+                    <p class="card-text">
+                        Most students choke in the last 10 minutes. Our adaptive timers train your brain to make decisions under severe time constraints. Normalize the pressure.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">Ruthless Analytics</h3>
+                    <p class="card-text">
+                        We don't just give you a score. We tell you *why* you lost marks. Was it a silly mistake? Conceptual gap? Or time mismanagement? Fix the root cause.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="queries-section">
+        <div class="container fade-up">
+            <h2 class="section-headline text-center" style="font-size: 2.5rem;">Engineered for your doubts.</h2>
+            <div class="query-grid">
+                <div class="query-box">
+                    <div class="query-question">"I know the concepts, but I can't attempt 100 questions in 60 mins."</div>
+                    <div class="query-answer">That's an interface and strategy issue, not a knowledge issue. Our simulated environment builds the muscle memory needed for speed.</div>
+                </div>
+                <div class="query-box">
+                    <div class="query-question">"Does the platform handle negative marking correctly?"</div>
+                    <div class="query-answer">Precisely. 0.50 deductions are calculated exactly as per SSC commission rules. Know your true standing.</div>
+                </div>
+                <div class="query-box">
+                    <div class="query-question">"Are these actual PYQs?"</div>
+                    <div class="query-answer">Yes. We don't invent irrelevant questions. We serve you the exact past papers so you understand the commission's mindset.</div>
+                </div>
+                <div class="query-box">
+                    <div class="query-question">"Why Skywalkers over free PDFs?"</div>
+                    <div class="query-answer">A PDF doesn't have a ticking clock. A PDF doesn't analyze your weak zones. You are here to clear an exam, not read a book.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 100px 0; text-align: center;">
+        <div class="container fade-up">
+            <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 30px;">Stop simulating. <span class="highlight-gold">Start competing.</span></h2>
+             <a href="#main-dashboard" class="cta-button" onclick="loadDashboard()">Enter the Arena</a>
+        </div>
+    </section>
+
 
     <script>
-        // --- DATA STRUCTURE (Yahan Data badhao) ---
-        const appData = {
-            "SSC": {
-                "CGL": ["CGL 2024 - Shift 1 (14 July)", "CGL 2024 - Shift 2 (14 July)", "CGL 2023 - Mains"],
-                "CHSL": ["CHSL 2023 - Shift 1", "CHSL 2023 - Shift 2"],
-                "MTS": ["MTS 2022 - Set A", "MTS 2022 - Set B"],
-                "GD": ["GD Constable - Set 1"]
-            },
-            "Railways": {
-                "NTPC": ["NTPC Level 6 - Shift 1", "NTPC Level 5 - Shift 2"],
-                "Group D": ["Group D - Set 1"]
-            }
+        // --- SCROLL ANIMATION SCRIPT (For smooth reveal) ---
+        const observerOptions = {
+            threshold: 0.2 // Trigger when 20% of element is visible
         };
 
-        // --- STATE MANAGEMENT ---
-        let currentLevel = 'home'; // home, category, subcategory
-        let currentCategory = '';
-        let currentSubCategory = '';
-        let selectedPaper = '';
-
-        const container = document.getElementById('mainContainer');
-        const backBtn = document.getElementById('backBtn');
-        const modal = document.getElementById('timerModal');
-
-        // 1. Initial Load (Home)
-        function loadHome() {
-            currentLevel = 'home';
-            backBtn.style.display = 'none';
-            container.innerHTML = '';
-            
-            Object.keys(appData).forEach(cat => {
-                container.innerHTML += `
-                    <div class="card" onclick="openCategory('${cat}')">
-                        <h2>${cat}</h2>
-                        <p>Access Previous Year Questions</p>
-                    </div>`;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // --- Placeholder function to load your dashboard ---
+        function loadDashboard() {
+            // Jab aapka main dashboard ready ho jaye, 
+            // toh yahan window.location.href = 'dashboard.html' laga dena.
+            alert("Redirecting to the Skywalkers Test Arena...");
+            // For now, let's just scroll down to a placeholder area or load the next script
+            // document.getElementById('mainContainer').scrollIntoView({behavior: 'smooth'});
         }
-
-        // 2. Open Category (e.g., SSC)
-        function openCategory(cat) {
-            currentLevel = 'category';
-            currentCategory = cat;
-            backBtn.style.display = 'block';
-            backBtn.innerText = `← Back to Home`;
-            container.innerHTML = '';
-
-            const subCats = Object.keys(appData[cat]);
-            subCats.forEach(sub => {
-                container.innerHTML += `
-                    <div class="card" onclick="openSubCategory('${sub}')" style="border-color: var(--neon-blue);">
-                        <h2>${sub}</h2>
-                        <p>Click to view Shifts</p>
-                    </div>`;
-            });
-        }
-
-        // 3. Open SubCategory (e.g., CGL -> Shows Shifts)
-        function openSubCategory(sub) {
-            currentLevel = 'subcategory';
-            currentSubCategory = sub;
-            backBtn.innerText = `← Back to ${currentCategory}`;
-            container.innerHTML = '';
-
-            const shifts = appData[currentCategory][sub];
-            shifts.forEach(shift => {
-                container.innerHTML += `
-                    <div class="card" onclick="openModal('${shift}')" style="border-color: var(--neon-pink);">
-                        <h3 style="margin:0;">${shift}</h3>
-                        <p style="margin-top:5px; color:#fff;">Click to Attempt</p>
-                    </div>`;
-            });
-        }
-
-        // 4. Back Button Logic
-        function goBack() {
-            if (currentLevel === 'subcategory') {
-                openCategory(currentCategory);
-            } else if (currentLevel === 'category') {
-                loadHome();
-            }
-        }
-
-        // --- MODAL & TIMER LOGIC ---
-        function openModal(paperName) {
-            selectedPaper = paperName;
-            document.getElementById('selectedPaperName').innerText = paperName;
-            modal.style.display = 'flex';
-            // Reset Custom inputs
-            document.getElementById('customTime').style.display = 'none';
-            document.getElementById('startCustomBtn').style.display = 'none';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        function toggleCustomInput() {
-            const input = document.getElementById('customTime');
-            const btn = document.getElementById('startCustomBtn');
-            if (input.style.display === 'none') {
-                input.style.display = 'block';
-                btn.style.display = 'block';
-            } else {
-                input.style.display = 'none';
-                btn.style.display = 'none';
-            }
-        }
-
-        // 5. START TEST FUNCTION (Link to test page)
-        function startTest(minutes) {
-            // Yahan hum Test Page par redirect karenge aur URL me data bhejenge
-            // Maan lo tumhara test page ka naam 'test.html' hai.
-            
-            const url = `test.html?paper=${encodeURIComponent(selectedPaper)}&time=${minutes}`;
-            window.location.href = url; 
-        }
-
-        function startCustomTest() {
-            const mins = document.getElementById('customTime').value;
-            if (!mins || mins <= 0) {
-                alert("Please enter valid minutes!");
-                return;
-            }
-            startTest(mins);
-        }
-
-        // Initialize
-        loadHome();
-
     </script>
 </body>
 </html>
