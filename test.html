@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skywalkers Test Interface</title>
+    <style>
+        /* --- CSS STYLES (TCS Standard Interface) --- */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; user-select: none; }
+        
+        /* Header */
+        .header { background-color: #2c3e50; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: 50px;}
+        .logo { font-size: 18px; font-weight: bold; }
+        .timer-box { font-size: 20px; font-weight: bold; background: #fff; color: #d32f2f; padding: 5px 15px; border-radius: 4px; border: 2px solid #d32f2f; }
+
+        /* Layout */
+        .container { display: flex; height: calc(100vh - 130px); margin-top: 10px; }
+        
+        /* Question Area */
+        .question-area { flex: 3; padding: 30px; background: white; overflow-y: auto; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd; }
+        .q-header { font-size: 18px; font-weight: 600; color: #555; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .q-text { font-size: 17px; margin-bottom: 25px; line-height: 1.6; color: #222; }
+        
+        /* Options */
+        .options label { display: flex; align-items: center; background: #fff; padding: 12px 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .options label:hover { background: #e9ecef; border-color: #007bff; }
+        .options input { margin-right: 15px; transform: scale(1.2); }
+
+        /* Sidebar (Palette) */
+        .sidebar { flex: 1; background: #fff; border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px; }
+        .student-info { background: #eef2f3; padding: 15px; text-align: center; border-bottom: 1px solid #ccc; font-weight: bold; color: #333; }
+        
+        .palette-container { padding: 15px; flex: 1; overflow-y: auto; }
+        .palette-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        
+        /* Buttons in Palette */
+        .p-btn { height: 40px; width: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ccc; border-radius: 50%; font-weight: bold; cursor: pointer; font-size: 14px; margin: auto; transition: 0.2s; }
+        .p-btn:hover { background: #f0f0f0; }
+        
+        /* Palette Colors (SSC Standard) */
+        .p-btn.answered { background-color: #28a745; color: white; border-color: #28a745; } /* Green */
+        .p-btn.not-answered { background-color: #dc3545; color: white; border-color: #dc3545; } /* Red */
+        .p-btn.review { background-color: #6f42c1; color: white; border-color: #6f42c1; } /* Purple */
+        .p-btn.not-visited { background-color: #fff; color: black; }
+        .p-btn.current { border: 2px solid #007bff; box-shadow: 0 0 6px rgba(0, 123, 255, 0.5); }
+
+        /* Footer */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #eef2f3; padding: 15px 20px; border-top: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; height: 60px; }
+        
+        .btn-group-left { display: flex; gap: 10px; }
+        .btn-group-right { margin-right: 27%; } /* Sidebar ke neeche Save Next aaye */
+
+        .btn { padding: 8px 20px; border: none; cursor: pointer; font-weight: bold; color: white; border-radius: 4px; font-size: 14px; text-transform: uppercase; border: 1px solid transparent; }
+        .btn-save { background-color: #28a745; }
+        .btn-save:hover { background-color: #218838; }
+        .btn-clear { background-color: white; color: black; border-color: #ccc; }
+        .btn-clear:hover { background-color: #e2e6ea; }
+        .btn-review { background-color: #ffc107; color: black; border-color: #e0a800; }
+        .btn-review:hover { background-color: #e0a800; }
+
+        .submit-btn-sidebar { width: 90%; padding: 10px; background: #007bff; color: white; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 10px auto; display: block; }
+        .submit-btn-sidebar:hover { background: #0056b3; }
+
+        /* Result Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .score-big { font-size: 48px; font-weight: bold; color: #007bff; margin: 10px 0; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; height: auto; margin-bottom: 70px; }
+            .question-area { width: 100%; height: 50vh; margin-right: 0; border: none; }
+            .sidebar { width: 100%; height: auto; margin-top: 10px; }
+            .palette-container { max-height: 200px; }
+            .btn-group-right { margin-right: 0; }
+            .footer { flex-direction: column; height: auto; gap: 10px; padding: 10px; }
+            .btn-group-left, .btn-group-right { width: 100%; display: flex; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" id="paperTitle">Loading Paper...</div>
+        <div class="timer-box" id="timer">--:--</div>
+    </div>
+
+    <div class="container">
+        <div class="question-area">
+            <div class="q-header">Question No. <span id="q-number">1</span></div>
+            <div class="q-text" id="q-text">Loading...</div>
+            <div class="options" id="options-container">
+                </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="student-info">
+                <div>Candidate: User</div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">Skywalkers Test Series</div>
+            </div>
+            
+            <div class="palette-container">
+                <div class="palette-grid" id="palette-box">
+                    </div>
+            </div>
+
+            <button class="submit-btn-sidebar" onclick="submitTest()">SUBMIT TEST</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="btn-group-left">
+            <button class="btn btn-review" onclick="markReview()">Mark for Review</button>
+            <button class="btn btn-clear" onclick="clearResponse()">Clear Response</button>
+        </div>
+        <div class="btn-group-right">
+            <button class="btn btn-save" onclick="saveAndNext()">Save & Next</button>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2>Test Result</h2>
+            <div class="score-big" id="score">0</div>
+            <p>Total Marks</p>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                <div style="color: green; font-weight: bold;">✔ Correct<br><span id="correct-count" style="font-size: 1.5rem;">0</span></div>
+                <div style="color: red; font-weight: bold;">✖ Wrong<br><span id="wrong-count" style="font-size: 1.5rem;">0</span></div>
+                <div style="color: #666; font-weight: bold;">⚪ Skipped<br><span id="unattempted-count" style="font-size: 1.5rem;">0</span></div>
+            </div>
+            <button class="submit-btn-sidebar" style="margin-top: 20px;" onclick="window.history.back()">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // YAHAN APNE QUESTIONS EDIT KAREIN
+        // ==========================================
+        const questions = [
+            {
+                id: 1,
+                text: "The 'Right to Constitutional Remedies' is provided under which Article?",
+                options: ["Article 19", "Article 32", "Article 21", "Article 14"],
+                correct: 1 // 1 means 'Article 32'
+            },
+            {
+                id: 2,
+                text: "Which number will replace the question mark? 5, 11, 24, 51, 106, ?",
+                options: ["215", "217", "220", "210"],
+                correct: 1
+            },
+            {
+                id: 3,
+                text: "Synonym of 'CANDID'?",
+                options: ["Secretive", "Frank", "Cruel", "Arrogant"],
+                correct: 1
+            },
+            {
+                id: 4,
+                text: "If A = 26, SUN = 27, then CAT = ?",
+                options: ["24", "27", "57", "58"],
+                correct: 2
+            },
+            {
+                id: 5,
+                text: "Who was the first Satyagrahi of Individual Satyagraha?",
+                options: ["Jawaharlal Nehru", "Vinoba Bhave", "Mahatma Gandhi", "Sardar Patel"],
+                correct: 1
+            }
+        ];
+        // ==========================================
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null); 
+        let questionStatus = new Array(questions.length).fill('not-visited'); 
+        
+        // --- URL DATA CAPTURE LOGIC ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const timeInMinutes = urlParams.get('time') || 60; // Default 60 mins
+        const paperName = urlParams.get('paper') || "Practice Set";
+        
+        let timerTime = timeInMinutes * 60; // Convert to seconds
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Set Header Title
+            document.getElementById('paperTitle').innerText = paperName;
+            initTest();
+        });
+
+        function initTest() {
+            loadQuestion(0);
+            renderPalette();
+            startTimer();
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            document.getElementById('q-number').innerText = index + 1;
+            document.getElementById('q-text').innerText = questions[index].text;
+            
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            questions[index].options.forEach((opt, i) => {
+                const checked = userAnswers[index] === i ? 'checked' : '';
+                optContainer.innerHTML += `
+                    <label onclick="selectOption(${i})">
+                        <input type="radio" name="opt" value="${i}" ${checked}> ${opt}
+                    </label>
+                `;
+            });
+            
+            // Mark as visited logic (Only if not answered yet)
+            if (questionStatus[index] === 'not-visited') {
+                questionStatus[index] = 'not-answered';
+            }
+            updatePaletteUI();
+        }
+
+        function selectOption(i) {
+            const radios = document.getElementsByName('opt');
+            radios[i].checked = true;
+        }
+
+        function saveAndNext() {
+            const selectedInfo = document.querySelector('input[name="opt"]:checked');
+            if (selectedInfo) {
+                userAnswers[currentQIndex] = parseInt(selectedInfo.value);
+                questionStatus[currentQIndex] = 'answered';
+            } else {
+                questionStatus[currentQIndex] = 'not-answered';
+            }
+            
+            if (currentQIndex < questions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            } else {
+                alert("This was the last question. Use 'Submit Test' button in sidebar.");
+            }
+            renderPalette();
+        }
+
+        function clearResponse() {
+            userAnswers[currentQIndex] = null;
+            questionStatus[currentQIndex] = 'not-answered';
+            const radios = document.querySelectorAll('input[name="opt"]');
+            radios.forEach(r => r.checked = false);
+            renderPalette();
+        }
+
+        function markReview() {
+            const selectedInfo = document.querySelector('input[name="opt"]:checked');
+            if(selectedInfo) {
+                 userAnswers[currentQIndex] = parseInt(selectedInfo.value);
+                 // In SSC, Answered & Marked for Review is counted as Answered, but color is Purple
+                 questionStatus[currentQIndex] = 'review'; 
+            } else {
+                questionStatus[currentQIndex] = 'review';
+            }
+            
+            if (currentQIndex < questions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            }
+            renderPalette();
+        }
+
+        function renderPalette() {
+            const box = document.getElementById('palette-box');
+            box.innerHTML = '';
+            questionStatus.forEach((status, i) => {
+                let className = 'p-btn ';
+                if (status === 'answered') className += 'answered';
+                else if (status === 'review') className += 'review';
+                else if (status === 'not-answered' && status !== 'not-visited') className += 'not-answered';
+                
+                if (i === currentQIndex) className += ' current';
+
+                box.innerHTML += `<div class="${className}" onclick="loadQuestion(${i})">${i + 1}</div>`;
+            });
+        }
+
+        function updatePaletteUI() {
+            renderPalette();
+        }
+
+        function startTimer() {
+            const timerElem = document.getElementById('timer');
+            const interval = setInterval(() => {
+                if (timerTime <= 0) {
+                    clearInterval(interval);
+                    submitTest();
+                    return;
+                }
+                timerTime--;
+                let min = Math.floor(timerTime / 60);
+                let sec = timerTime % 60;
+                timerElem.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+            }, 1000);
+        }
+
+        function submitTest() {
+            let correct = 0;
+            let wrong = 0;
+            let unattempted = 0;
+
+            userAnswers.forEach((ans, index) => {
+                if (ans === null) {
+                    unattempted++;
+                } else if (ans === questions[index].correct) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            // SSC CGL Pattern: +2 for Correct, -0.50 for Wrong
+            let totalScore = (correct * 2) - (wrong * 0.50);
+
+            document.getElementById('score').innerText = totalScore;
+            document.getElementById('correct-count').innerText = correct;
+            document.getElementById('wrong-count').innerText = wrong;
+            document.getElementById('unattempted-count').innerText = unattempted;
+
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
