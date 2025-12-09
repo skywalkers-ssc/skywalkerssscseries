@@ -3,140 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detailed Analytics</title>
+    <title>Analytics | Skywalkers</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #334155; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
         
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .score-card {
+            background: #1e293b; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 30px;
+        }
+        h1 { font-size: 3rem; margin: 10px 0; color: #3b82f6; }
         
-        /* Header Banner */
-        .header { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .score-box h1 { margin: 0; font-size: 2.5rem; color: #3b82f6; }
-        .score-box p { margin: 0; color: #64748b; }
-        
-        .rank-badge { background: #dbeafe; color: #1e40af; padding: 10px 20px; border-radius: 30px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; }
+        .val { font-size: 1.5rem; font-weight: bold; }
+        .green { color: #22c55e; } .red { color: #ef4444; }
 
-        /* Grid Layout */
-        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card h3 { margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        /* TELEGRAM BUTTON (Fancy) */
+        .tg-btn {
+            display: block; width: 100%; padding: 18px; margin-top: 30px;
+            background: linear-gradient(45deg, #0088cc, #005f8f);
+            color: white; text-decoration: none; font-size: 1.1rem; font-weight: bold;
+            border-radius: 12px; position: relative; overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.4);
+            transition: transform 0.2s;
+        }
+        .tg-btn:hover { transform: scale(1.02); }
+        .tg-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 2s infinite;
+        }
+        @keyframes shine { 100% { left: 100%; } }
 
-        /* Stats Row */
-        .stats-row { display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .stat { text-align: center; }
-        .stat-val { font-size: 1.5rem; font-weight: bold; }
-        .stat-label { font-size: 0.9rem; color: #64748b; }
-        .c-green { color: #10b981; }
-        .c-red { color: #ef4444; }
-        .c-gray { color: #94a3b8; }
-
-        /* Subject Analysis */
-        .subject-row { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
-        .bar-bg { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; margin: 0 15px; }
-        .bar-fill { height: 100%; background: #3b82f6; border-radius: 4px; }
-        
-        .btn-home { display: block; width: 200px; margin: 30px auto; padding: 15px; background: #0f172a; color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="header">
-            <div class="score-box">
-                <p>Total Score</p>
-                <h1><span id="finalScore">0</span>/200</h1>
+        <div class="score-card">
+            <p>Your Score</p>
+            <h1 id="score">0/200</h1>
+            
+            <div class="grid">
+                <div class="stat-box">
+                    <div class="val green" id="correct">0</div>
+                    <div>Correct</div>
+                </div>
+                <div class="stat-box">
+                    <div class="val red" id="wrong">0</div>
+                    <div>Wrong</div>
+                </div>
             </div>
-            <div class="rank-badge">🏆 You performed better than 85% students</div>
+
+            <a href="https://t.me/skyywalkerrs" target="_blank" class="tg-btn">
+                Join @skyywalkerrs on Telegram ✈️
+            </a>
+            
+            <a href="dashboard.html" style="display:block; margin-top:20px; color:#94a3b8; text-decoration:none;">Back to Dashboard</a>
         </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>Performance Overview</h3>
-                <div class="stats-row">
-                    <div class="stat">
-                        <div class="stat-val c-green" id="correctVal">0</div>
-                        <div class="stat-label">Correct</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-val c-red" id="wrongVal">0</div>
-                        <div class="stat-label">Wrong</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-val c-gray" id="skipVal">0</div>
-                        <div class="stat-label">Skipped</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-val" style="color:#3b82f6;" id="accVal">0%</div>
-                        <div class="stat-label">Accuracy</div>
-                    </div>
-                </div>
-                <canvas id="performanceChart" style="max-height: 300px;"></canvas>
-            </div>
-
-            <div class="card">
-                <h3>Topic Strength</h3>
-                
-                <div class="subject-row">
-                    <span>Gen. Awareness</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 70%"></div></div>
-                    <span>70%</span>
-                </div>
-                <div class="subject-row">
-                    <span>Reasoning</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 90%; background:#10b981;"></div></div>
-                    <span>90%</span>
-                </div>
-                <div class="subject-row">
-                    <span>Quant</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 40%; background:#ef4444;"></div></div>
-                    <span>40%</span>
-                </div>
-                <div class="subject-row">
-                    <span>English</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 65%"></div></div>
-                    <span>65%</span>
-                </div>
-
-                <div style="margin-top: 40px; padding: 15px; background: #fffbeb; border-radius: 8px; border-left: 4px solid #fbbf24;">
-                    <strong>Tip:</strong> You spent too much time on Quant. Try attempting Reasoning first next time.
-                </div>
-            </div>
-        </div>
-
-        <a href="dashboard.html" class="btn-home">Back to Dashboard</a>
     </div>
 
     <script>
-        // Get Data from LocalStorage (passed from test.html)
-        const resultData = JSON.parse(localStorage.getItem('testResult')) || { score:0, correct:0, wrong:0, skip:0, accuracy:0 };
-
-        document.getElementById('finalScore').innerText = resultData.score;
-        document.getElementById('correctVal').innerText = resultData.correct;
-        document.getElementById('wrongVal').innerText = resultData.wrong;
-        document.getElementById('skipVal').innerText = resultData.skip;
-        document.getElementById('accVal').innerText = resultData.accuracy + "%";
-
-        // Chart.js Configuration
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Correct', 'Wrong', 'Skipped'],
-                datasets: [{
-                    data: [resultData.correct, resultData.wrong, resultData.skip],
-                    backgroundColor: ['#10b981', '#ef4444', '#e2e8f0'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                cutout: '70%',
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
+        const res = JSON.parse(localStorage.getItem('testResult')) || {score:0, correct:0, wrong:0};
+        document.getElementById('score').innerText = res.score;
+        document.getElementById('correct').innerText = res.correct;
+        document.getElementById('wrong').innerText = res.wrong;
     </script>
 </body>
 </html>
